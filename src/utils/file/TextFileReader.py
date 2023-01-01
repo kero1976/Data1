@@ -1,28 +1,41 @@
 
 import os
 from logging import getLogger
+from retry import retry
 
 logger = getLogger(__name__)
 
 
-class FileReader():
+class TextFileReader():
+    @retry(tries=5, delay=1, backoff=2)
     def read(self, filepath):
         """
         テキストファイルを読み込む。
         """
-        logger.debug({'action': 'run', 'params': {
+        print('name:' + __name__)
+        logger.debug({'action': 'start', 'params': {
             'filepath': filepath
         }})
-        with open(self._abspath(filepath), 'r') as f:
-            result = f.read()
-            logger.debug({'action': 'success'})
-            return result
+        try:
+            with open(self._abspath(filepath), 'r', encoding='cp932') as f:
+                result = f.read()
+                logger.debug({'action': 'success'})
+                return result
+        except UnicodeDecodeError as e:
+            logger.debug({
+                'action': 'run',
+                'message': e
+            })
+            with open(self._abspath(filepath), 'r', encoding='utf-8') as f:
+                result = f.read()
+                logger.debug({'action': 'success'})
+                return result
 
     def _abspath(self, path):
         """
         絶対パスにして返す。
         """
-        logger.debug({'action': 'run', 'params': {
+        logger.debug({'action': 'start', 'params': {
             'path': path
         }})
         result = os.path.abspath(path)
