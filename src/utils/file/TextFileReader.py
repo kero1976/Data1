@@ -7,12 +7,14 @@ logger = getLogger(__name__)
 
 
 class TextFileReader():
-    @retry(tries=5, delay=1, backoff=2)
+    """
+    テキストファイルの読み込みクラス。
+    """
+    @retry(exceptions=PermissionError, tries=5, delay=1, backoff=2)
     def read(self, filepath):
         """
         テキストファイルを読み込む。
         """
-        print('name:' + __name__)
         logger.debug({'action': 'start', 'params': {
             'filepath': filepath
         }})

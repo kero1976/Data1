@@ -5,6 +5,7 @@ logging.basicConfig(level=logging.DEBUG, format=formatter)
 console = logging.StreamHandler()
 logging.getLogger('utils').addHandler(console)
 
+
 def test():
     data = TextFileReader().read('./test/data/sample1.txt')
     assert data == 'aaaa'
