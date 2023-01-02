@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO, format=formatter)
 logger = getLogger(__name__)
 
 
-class Suumo():
+class SuumoApp():
     def get_alldata(self):
         """
         URLを解析して、そのページの情報をすべて取得して返す。
@@ -72,7 +72,7 @@ class Suumo():
         return result
 
 
-suumo = Suumo()
+suumo = SuumoApp()
 alldata = suumo.get_alldata()
 homes = suumo.get_homes(alldata)
 csvs = []
@@ -80,6 +80,8 @@ for home in homes:
     dict = suumo.get_home_dict(home)
     csvs.append(Home(dict))
 
+for csv in csvs:
+    print(csv)
 # for csv in csvs:
 #     print(csv['物件名'])
 #     print(csv['販売価格'])
