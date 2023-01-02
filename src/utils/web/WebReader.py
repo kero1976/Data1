@@ -10,7 +10,7 @@ class WebReader():
     """
     WEBスクレイピングクラス。
     """
-    # @retry(tries=5, delay=1, backoff=2)
+    @retry(tries=5, delay=1, backoff=2)
     def get_html(self, url):
         logger.debug({
             'action': 'start',
@@ -20,7 +20,8 @@ class WebReader():
         })
         session = HTMLSession()
         r = session.get(url)
-        soup = BeautifulSoup(r.html.render(), 'lxml')
+        r.html.render()
+        soup = BeautifulSoup(r.text, 'lxml')
         logger.debug({
             'action': 'success'
         })
