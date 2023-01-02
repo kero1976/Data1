@@ -33,6 +33,18 @@ class TextFileReader():
                 logger.debug({'action': 'success'})
                 return result
 
+    def read_line(self, filepath):
+        """
+        テキストファイルを読み込み、改行コードで区切ったリストを返す
+        """
+        logger.debug({'action': 'start', 'params': {
+            'filepath': filepath
+        }})
+        data = self.read(filepath)
+        result = data.split('\n')
+        logger.debug({'action': 'success'})
+        return result
+
     def _abspath(self, path):
         """
         絶対パスにして返す。

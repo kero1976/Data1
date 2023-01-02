@@ -1,3 +1,7 @@
 /venv
 src/utils/file/__pycache__/
 src/summo/__pycache__/
+src/utils/__pycache__/
+src/utils/csv/__pycache__/
+src/utils/date/__pycache__/
+test/__pycache__/

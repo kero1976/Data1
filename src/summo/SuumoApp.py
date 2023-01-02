@@ -2,6 +2,7 @@
 from utils.web.WebReader import WebReader
 from logging import getLogger
 from summo.Home import Home
+from utils.csv.CsvWriter import CsvFileWriter
 import logging
 formatter = "%(asctime)s:%(funcName)s:%(message)s"
 logging.basicConfig(level=logging.INFO, format=formatter)
@@ -80,16 +81,6 @@ for home in homes:
     dict = suumo.get_home_dict(home)
     csvs.append(Home(dict))
 
-for csv in csvs:
-    print(csv)
-# for csv in csvs:
-#     print(csv['物件名'])
-#     print(csv['販売価格'])
-#     print(csv['所在地'])
-#     print(csv['沿線・駅'])
-#     print(csv['専有面積'])
-#     print(csv['間取り'])
-#     print(csv['バルコニー'])
-#     print(csv['築年月'])
-
+writer = CsvFileWriter()
+writer.write('data.csv', csvs)
 print('END')
