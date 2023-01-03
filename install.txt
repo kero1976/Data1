@@ -1,2 +1,3 @@
-pip install retry
-pip install requests_html
+retry
+requests_html
+pytest

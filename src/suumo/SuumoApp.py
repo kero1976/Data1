@@ -1,11 +1,8 @@
 
 from utils.web.WebReader import WebReader
 from logging import getLogger
-from summo.Home import Home
-from utils.csv.CsvWriter import CsvFileWriter
-import logging
-formatter = "%(asctime)s:%(funcName)s:%(message)s"
-logging.basicConfig(level=logging.INFO, format=formatter)
+from suumo.Home import Home
+
 logger = getLogger(__name__)
 
 
@@ -17,7 +14,8 @@ class SuumoApp():
         logger.debug({
             'action': 'start',
         })
-        url = 'https://suumo.jp/jj/bukken/ichiran/JJ010FJ001/?ar=030&bs=011&ta=13&jspIdFlg=patternShikugun&sc=13123&kb=1&kt=10000&mb=50&mt=9999999&ekTjCd=&ekTjNm=&tj=0&kr=A&cct=003&cn=9999999&srch_navi=1'
+        url = 'https://suumo.jp/jj/bukken/ichiran/JJ012FC001/?ar=030&bs=011&cct=003&cn=9999999&ekTjCd=&ekTjNm=&et=15&kb=1&kr=A&kt=3500&mb=50&mt=9999999&sc=13101&sc=13102&sc=13103&sc=13104&sc=13105&sc=13113&sc=13106&sc=13107&sc=13108&sc=13118&sc=13121&sc=13122&sc=13123&sc=13109&sc=13110&sc=13111&sc=13112&sc=13114&sc=13115&sc=13120&sc=13116&sc=13117&sc=13119&ta=13&tj=0&po=0&pj=1&pc=100'
+
         result = WebReader().get_html(url)
         logger.info({
             'action': 'success',
@@ -73,14 +71,20 @@ class SuumoApp():
         return result
 
 
-suumo = SuumoApp()
-alldata = suumo.get_alldata()
-homes = suumo.get_homes(alldata)
-csvs = []
-for home in homes:
-    dict = suumo.get_home_dict(home)
-    csvs.append(Home(dict))
-
-writer = CsvFileWriter()
-writer.write('data.csv', csvs)
-print('END')
+    def newlist(self):
+        logger.debug({
+            'action': 'start',
+        })
+        alldata = self.get_alldata()
+        homes = self.get_homes(alldata)
+        result = []
+        for home in homes:
+            dict = self.get_home_dict(home)
+            result.append(Home(dict))
+        logger.info({
+            'action': 'success',
+            'result': {
+                'size': len(result)
+            }
+        })
+        return result
