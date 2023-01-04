@@ -63,6 +63,9 @@ class Home2():
             self.build = dict['build']
             self.regist = dict['regist']
             self.hashdata = dict['hashdata']
-
+            self.kanrihi = dict['kanrihi']
+            self.shuuzen = dict['shuuzen']
+            self.kaisu = dict['kaisu']
+            self.soukosu = dict['soukosu']
     def __eq__(self, __o: object) -> bool:
         return self.hashdata == __o.hashdata

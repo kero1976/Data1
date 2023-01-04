@@ -1,5 +1,5 @@
-from suumo.SuumoApp import SuumoApp
-from suumo.Home import Home
+from suumo.SuumoApp2 import SuumoApp2
+from suumo.Home2 import Home2
 from utils.csv.CsvFileReader import CsvFileReader
 from utils.csv.CsvFileWriter import CsvFileWriter
 from logging import getLogger
@@ -13,7 +13,7 @@ logger = getLogger(__name__)
 class MainApp():
     def main(self):
         logger.info('-------------------------Suumoサイトへの接続開始-----------------------')
-        suumo = SuumoApp()
+        suumo = SuumoApp2()
         newdata = suumo.newlist()
 
 
@@ -21,7 +21,7 @@ class MainApp():
         master = []
         logger.info('-------------------------master読み込み開始-----------------------')
         for row in reader:
-            master.append(Home(row))
+            master.append(Home2(row))
         logger.info('-------------------------master読み込み終了({}件)-----------------------'.format(len(master)))
 
         logger.info('-------------------------追加処理開始({}件)-----------------------'.format(len(newdata)))

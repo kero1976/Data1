@@ -53,7 +53,7 @@ class SuumoApp2():
         """
         1件の住宅情報を受け取り、urlを取得する
         """
-        logger.info({
+        logger.debug({
             'action': 'start',
         })
         result = None
@@ -70,7 +70,7 @@ class SuumoApp2():
         return result
 
     def detail_get(self, data):
-        logger.info({
+        logger.debug({
             'action': 'start',
         })
         result = {}
@@ -146,16 +146,20 @@ class SuumoApp2():
         alldata = self.get_alldata()
         homes = self.get_homes(alldata)
         result = []
+        no = 0
         for home in homes:
+            no += 1
             try:
                 alldata = self.get_home_url(home)
                 result.append(self.detail_get(alldata))
                 logger.info({
                     'action': 'success',
+                    'no': no
                 })
             except Exception as e:
                 logger.error({
                     'action': 'fail',
+                    'no': no,
                     'e': e
                 })
         logger.info({
@@ -165,12 +169,3 @@ class SuumoApp2():
             }
         })
         return result
-
-suumo2 = SuumoApp2()
-
-result = suumo2.newlist()
-
-from utils.csv.CsvFileWriter import CsvFileWriter
-
-writer = CsvFileWriter()
-writer.write('newdata2.csv', result)
