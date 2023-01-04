@@ -1,14 +1,14 @@
 
 from utils.web.WebReader import WebReader
 from logging import getLogger
-from suumo.Home import Home
+from suumo.Home2 import Home2
 from utils.DebugUtil import DebugUtil
 import re
 
 logger = getLogger(__name__)
 
 import logging
-formatter = "%(asctime)s:%(funcName)s:%(message)s"
+formatter = "%(asctime)s:%(levelname)s:%(funcName)s:%(message)s"
 logging.basicConfig(level=logging.INFO, format=formatter)
 
 class SuumoApp2():
@@ -62,8 +62,9 @@ class SuumoApp2():
             for j in url:
                 link = j.get('href')
                 result = WebReader().get_html('https://suumo.jp{}'.format(link))
-        logger.debug({
+        logger.info({
             'action': 'success',
+            'result': link
 
         })
         return result
@@ -72,91 +73,49 @@ class SuumoApp2():
         logger.info({
             'action': 'start',
         })
-        result = None
-        result =  data.find_all('div', {'class': 'section_h2-body js-acc_contents'})
-        self.detail_get_name(result[3])
-        self.detail_get_table(result[3])
+        result = {}
+        tables =  data.find_all('div', {'class': 'section_h2-body js-acc_contents'})
 
-    def detail_get_name(self, data):
-        outer = data.find_all('div',{'class': 'secTitleOuterR'})
-        inner = outer[0].find_all('h3',{'class': 'secTitleInnerR'})
-        result = inner[0].string
-        logger.debug({
-            'action': 'success',
-            'result': result
-        })
-        return result
+        for i in tables:
+            dict = self.detail_get_table(i)
+            result.update(dict)
+
+        return Home2(result)
 
     def detail_get_table(self, data):
-        table = data.find_all('tbody',{'class': 'vat tal'})
-        self.detail_get_table_1(table[0])
+        tables = data.find_all('tbody',{'class': 'vat tal'})
+        result = {}
+        for i in tables:
+            temp = self._detail_get_table(i)
+            result.update(temp)
 
-    def detail_get_table_1(self, data):
+        return result
+
+    def _detail_get_table(self, data):
         tr = data.find_all('tr')
-        logger.info(self.detail_get_table_1_row3(tr[2]))
-        logger.info(self.detail_get_table_1_row4(tr[3]))
-        logger.info(self.detail_get_table_1_row5(tr[4]))
-
-
-    def detail_get_table_1_row3(self, data):
-        """
-        価格
-        管理費
-        """
-        th = data.find_all('th')
-        td = data.find_all('td')
-        price_name = self._get_th_value(th[0])
-        kanrihi_name = self._get_th_value(th[1])
-        price_val = self._get_td_value(td[0])
-        kanrihi_val = self._get_td_value(td[1])
-        result = {}
-        result[price_name] = price_val
-        result[kanrihi_name] = kanrihi_val
-        logger.debug({
-            'action': 'success',
-            'result': result
-        })
-        return result
-
-    def detail_get_table_1_row4(self, data):
-        """
-        修繕積立金
-        """
-        th = data.find_all('th')
-        td = data.find_all('td')
-        name = self._get_th_value(th[0])
-        val = self._get_td_value(td[0])
-        result = {}
-        result[name] = val
-        logger.debug({
-            'action': 'success',
-            'result': result
-        })
-        return result
-
-    def detail_get_table_1_row5(self, data):
-        """
-        諸費用
-        間取り
-        """
-        th = data.find_all('th')
-        td = data.find_all('td')
-        price_name = self._get_th_value(th[0])
-        kanrihi_name = self._get_th_value(th[1])
-        price_val = self._get_td_value(td[0])
-        kanrihi_val = self._get_td_value(td[1])
-        result = {}
-        result[price_name] = price_val
-        result[kanrihi_name] = kanrihi_val
-        logger.debug({
-            'action': 'success',
-            'result': result
-        })
-        return result
+        list = {}
+        for i in tr:
+            th = i.find_all('th')
+            td = i.find_all('td')
+            if len(th) == len(td):
+                logger.debug('正常,サイズ:{}'.format(len(th)))
+                for i in range(len(th)):
+                    key = self._get_th_value(th[i])
+                    val = self._get_td_value(td[i])
+                    list[key] = val
+            else:
+                logger.debug('異常、サイズが一致しません')
+        return list
 
     def _get_th_value(self, th):
-        val = th.find_all('div')
-        result = val[0].string
+        logger.debug({
+            'action': 'start',
+        })
+        try:
+            val = th.find_all('div')
+            result = val[0].string
+        except:
+            result = th.string
         logger.debug({
             'action': 'success',
             'result': result
@@ -164,10 +123,16 @@ class SuumoApp2():
         return result
 
     def _get_td_value(self, td):
-        val = td.children
-        for i in val:
-            result = re.sub('\s', '', i)
-            break
+        logger.debug({
+            'action': 'start',
+            'param': td})
+        try:
+            val = td.children
+            for i in val:
+                result = re.sub('\s', '', i)
+                break
+        except Exception as e:
+            result = ''
         logger.debug({
             'action': 'success',
             'result': result
@@ -182,10 +147,17 @@ class SuumoApp2():
         homes = self.get_homes(alldata)
         result = []
         for home in homes:
-            alldata = self.get_home_url(home)
-            self.detail_get(alldata)
-            break
-            
+            try:
+                alldata = self.get_home_url(home)
+                result.append(self.detail_get(alldata))
+                logger.info({
+                    'action': 'success',
+                })
+            except Exception as e:
+                logger.error({
+                    'action': 'fail',
+                    'e': e
+                })
         logger.info({
             'action': 'success',
             'result': {
@@ -195,4 +167,10 @@ class SuumoApp2():
         return result
 
 suumo2 = SuumoApp2()
-suumo2.newlist()
+
+result = suumo2.newlist()
+
+from utils.csv.CsvFileWriter import CsvFileWriter
+
+writer = CsvFileWriter()
+writer.write('newdata2.csv', result)
