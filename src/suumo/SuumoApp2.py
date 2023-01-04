@@ -62,7 +62,7 @@ class SuumoApp2():
             for j in url:
                 link = j.get('href')
                 result = WebReader().get_html('https://suumo.jp{}'.format(link))
-        logger.info({
+        logger.debug({
             'action': 'success',
 
         })
@@ -93,9 +93,9 @@ class SuumoApp2():
 
     def detail_get_table_1(self, data):
         tr = data.find_all('tr')
-        self.detail_get_table_1_row3(tr[2])
-        self.detail_get_table_1_row4(tr[3])
-        self.detail_get_table_1_row5(tr[4])
+        logger.info(self.detail_get_table_1_row3(tr[2]))
+        logger.info(self.detail_get_table_1_row4(tr[3]))
+        logger.info(self.detail_get_table_1_row5(tr[4]))
 
 
     def detail_get_table_1_row3(self, data):
@@ -112,7 +112,7 @@ class SuumoApp2():
         result = {}
         result[price_name] = price_val
         result[kanrihi_name] = kanrihi_val
-        logger.info({
+        logger.debug({
             'action': 'success',
             'result': result
         })
@@ -128,7 +128,7 @@ class SuumoApp2():
         val = self._get_td_value(td[0])
         result = {}
         result[name] = val
-        logger.info({
+        logger.debug({
             'action': 'success',
             'result': result
         })
@@ -148,14 +148,13 @@ class SuumoApp2():
         result = {}
         result[price_name] = price_val
         result[kanrihi_name] = kanrihi_val
-        logger.info({
+        logger.debug({
             'action': 'success',
             'result': result
         })
         return result
 
     def _get_th_value(self, th):
-        print(th)
         val = th.find_all('div')
         result = val[0].string
         logger.debug({
@@ -169,7 +168,7 @@ class SuumoApp2():
         for i in val:
             result = re.sub('\s', '', i)
             break
-        logger.info({
+        logger.debug({
             'action': 'success',
             'result': result
         })
