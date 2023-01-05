@@ -52,20 +52,22 @@ class Home2():
             self.kaisu = dict['所在階']
             self.soukosu = dict['総戸数']
         except Exception as e:
-            logger.info('エラー',e)
-            self.name = dict['name']
-            self.price = dict['price']
-            self.location = dict['location']
-            self.station = dict['station']
-            self.area = dict['area']
-            self.plan = dict['plan']
-            self.balcony = dict['balcony']
-            self.build = dict['build']
-            self.regist = dict['regist']
-            self.hashdata = dict['hashdata']
-            self.kanrihi = dict['kanrihi']
-            self.shuuzen = dict['shuuzen']
-            self.kaisu = dict['kaisu']
-            self.soukosu = dict['soukosu']
+            try:
+                self.name = dict['name']
+                self.price = dict['price']
+                self.location = dict['location']
+                self.station = dict['station']
+                self.area = dict['area']
+                self.plan = dict['plan']
+                self.balcony = dict['balcony']
+                self.build = dict['build']
+                self.regist = dict['regist']
+                self.hashdata = dict['hashdata']
+                self.kanrihi = dict['kanrihi']
+                self.shuuzen = dict['shuuzen']
+                self.kaisu = dict['kaisu']
+                self.soukosu = dict['soukosu']
+            except Exception as e:
+                logger.error('Homeデータ作成でエラー', e)
     def __eq__(self, __o: object) -> bool:
         return self.hashdata == __o.hashdata
