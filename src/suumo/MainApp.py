@@ -9,7 +9,7 @@ formatter = "%(asctime)s:%(funcName)s:%(message)s"
 logging.basicConfig(level=logging.INFO, format=formatter)
 
 logger = getLogger(__name__)
-
+FileName = 'newdata2.csv'
 class MainApp():
     def main(self):
         logger.info('-------------------------Suumoサイトへの接続開始-----------------------')
@@ -17,7 +17,7 @@ class MainApp():
         newdata = suumo.newlist()
 
 
-        reader = CsvFileReader().read('data.csv')
+        reader = CsvFileReader().read(FileName)
         master = []
         logger.info('-------------------------master読み込み開始-----------------------')
         for row in reader:
@@ -37,7 +37,7 @@ class MainApp():
 
 
         writer = CsvFileWriter()
-        writer.write('data.csv', master)
+        writer.write(FileName, master)
         logger.info('-------------------------masterを更新しました-----------------------')
         print('END')
 
