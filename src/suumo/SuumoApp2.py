@@ -7,9 +7,6 @@ import re
 
 logger = getLogger(__name__)
 
-import logging
-formatter = "%(asctime)s:%(levelname)s:%(funcName)s:%(message)s"
-logging.basicConfig(level=logging.INFO, format=formatter)
 
 class SuumoApp2():
     def get_alldata(self):
