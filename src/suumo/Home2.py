@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from utils.date.DateUtil import DateUtil
 import hashlib
 from logging import getLogger
+from utils.money.Money import Money
 
 logger = getLogger(__name__)
 
@@ -21,6 +22,7 @@ class Home2():
     shuuzen: str
     kaisu: str
     soukosu: str
+    goukei: int
 
     def __init__(self, dict):
         try:
@@ -51,6 +53,7 @@ class Home2():
             self.shuuzen = dict['修繕積立金']
             self.kaisu = dict['所在階']
             self.soukosu = dict['総戸数']
+            self.goukei = Money.toInt(self.kanrihi) + Money.toInt(self.shuuzen)
         except Exception as e:
             try:
                 self.name = dict['name']
@@ -67,6 +70,10 @@ class Home2():
                 self.shuuzen = dict['shuuzen']
                 self.kaisu = dict['kaisu']
                 self.soukosu = dict['soukosu']
+                if dict.get('goukei'):
+                    self.goukei = dict['goukei']
+                else:
+                    self.goukei = Money.toInt(self.kanrihi) + Money.toInt(self.shuuzen)
             except Exception as e:
                 logger.error('Homeデータ作成でエラー', e)
     def __eq__(self, __o: object) -> bool:
